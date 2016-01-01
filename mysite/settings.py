@@ -122,7 +122,7 @@ STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'polls.static'),
+    os.path.join(BASE_DIR, 'polls/static'),
 )
 
 # # Allow all host hosts/domain names for this site
