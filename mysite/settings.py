@@ -125,6 +125,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'polls/static'),
 )
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
 # # Allow all host hosts/domain names for this site
 ALLOWED_HOSTS = ['*']
 
@@ -152,4 +154,3 @@ except Exception as e:
         'PORT': '5432',
     }
 }
-    pass
