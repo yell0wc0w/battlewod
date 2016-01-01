@@ -141,7 +141,7 @@ try:
     from .local_settings import *
     print('Local settings running!')
 except Exception as e:
-    print('Production settings running!')
+    print('Production settings running! ')
     DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
