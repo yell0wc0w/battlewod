@@ -142,4 +142,14 @@ try:
     print('Local settings running!')
 except Exception as e:
     print('Production settings running!')
+    DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        'NAME': 'd47j3p8uns4h39',
+        'USER': 'jybvpmolgktaho',
+        'PASSWORD': 'kRzcL7uxFn1RYzrZBSFcpzSlGQ',
+        'HOST': 'ec2-54-204-8-138.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
     pass
