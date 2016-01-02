@@ -29,7 +29,7 @@ $(function() {
 </div><br><br>
 
 <!-- Athlete search section -->
-<form class="form-inline col-sm-6" role="form" action="http://localhost:8000/polls/" method="post">
+<form class="form-inline col-sm-6" role="form" method="post">
     {% csrf_token %}
     <div class="form-group">
         <label for="athletename">Search athlete:</label>
@@ -49,7 +49,7 @@ Cannot find your profile? <button type="button" class="btn btn-info btn-xs" data
                 <h4 class="modal-title">Create new profile</h4>
             </div>
             <div class="modal-body">
-                <form class="form-inline" role="form" action="http://localhost:8000/polls/" method="post">
+                <form class="form-inline" role="form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="newathletename">Athlete full name</label>
