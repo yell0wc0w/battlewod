@@ -1,6 +1,8 @@
 from django.test import TestCase, Client
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 import unittest
+import string
+
 
 from .models import AthleteProfile
 
@@ -60,3 +62,9 @@ class AthleteProfileTest(TestCase):
         response = myClient.post('/polls/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': 'zzz'})
         assert(response.context['stat_result'] == 0)
 
+    def test_version_is_present_in_page_using_POST(self):
+        myClient = Client()
+        response = myClient.post('/polls/', {'athletename': 'Hoang'})
+        assert(response.context['version'] != None)
+        html_response_in_string = response.getvalue().decode("utf-8")
+        assert(html_response_in_string.find('Currently using BattleWOD v') >= 0)
