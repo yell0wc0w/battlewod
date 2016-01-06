@@ -103,6 +103,7 @@ class AthleteProfile(models.Model):
         return self.name
 
     def setup_stats(self):
+
         self.stats_dict['snatch_1rm'] = self.snatch_1rm
         self.stats_dict['power_snatch_1rm'] = self.power_snatch_1rm
         self.stats_dict['hang_snatch_1rm'] = self.hang_snatch_1rm
@@ -177,6 +178,21 @@ class AthleteProfile(models.Model):
         return self.stats_dict.get(stat_to_read)
 
     def presave_stats(self):
+        try:
+            set_to_validate_numeric_field = {'snatch_1rm', 'power_snatch_1rm', 'hang_snatch_1rm', 'squat_snatch_1rm',
+                                                'clean_and_jerk_1rm', 'hang_clean_1rm', 'power_clean_1rm', 'squat_clean_1rm',
+                                                'split_jerk_1rm', 'push_jerk_1rm', 'push_press_1rm', 'shoulder_press_1rm',
+                                                'backsquat_1rm', 'backsquat_3rm', 'backsquat_5rm', 'front_squat_1rm',
+                                                'front_squat_3rm', 'front_squat_5rm', 'deadlift_1rm', 'deadlift_3rm', 'deadlift_5rm'}
+
+            for key in set_to_validate_numeric_field:
+                int(self.stats_dict[key])
+
+        except ValueError:
+            print('Input error in number fields, rejecting request and resetting dictionary')
+            self.setup_stats()
+            return
+
         self.snatch_1rm = self.stats_dict['snatch_1rm']
         self.power_snatch_1rm = self.stats_dict['power_snatch_1rm']
         self.hang_snatch_1rm = self.stats_dict['hang_snatch_1rm']
@@ -193,7 +209,7 @@ class AthleteProfile(models.Model):
         self.push_press_1rm = self.stats_dict['push_press_1rm']
         self.shoulder_press_1rm = self.stats_dict['shoulder_press_1rm']
 
-        self.backsquat_1rm = self.stats_dict['backsquat_1rm']
+        self.backsquat_1rm = int(self.stats_dict['backsquat_1rm'])
         self.backsquat_3rm = self.stats_dict['backsquat_3rm']
         self.backsquat_5rm = self.stats_dict['backsquat_5rm']
 
