@@ -1,22 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.views import generic
-from django.utils import timezone
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from .models import Question, Choice, AthleteProfile
-from .forms import AthleteNameForm
-
-class DetailView(generic.DetailView):
-    model = Question
-    template_name = 'polls/detail.html'
-
-    def get_queryset(self):
-        """
-        Excludes any questions that aren't published yet.
-        """
-        return Question.objects.filter(pub_date__lte=timezone.now())
-
+from .models import AthleteProfile
+from mysite.settings import VERSION
 
 def AthleteView(request):
     # Handle text input, as needed
@@ -43,7 +30,7 @@ def AthleteView(request):
             athleteprofile = AthleteProfile.objects.filter(name__contains=athletename)[0]
         except ObjectDoesNotExist:
             athleteprofile = AthleteProfile.objects.filter(name__contains='')[0]
-        context = {'athleteprofile': athleteprofile}
+        context = {'athleteprofile': athleteprofile, 'version': VERSION}
         html = 'polls/index.html'
 
     elif POST_data.get('id') is not None:

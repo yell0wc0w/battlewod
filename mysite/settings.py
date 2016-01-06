@@ -154,3 +154,5 @@ except Exception as e:
         'PORT': '5432',
     }
 }
+
+VERSION = '1.1.0'
