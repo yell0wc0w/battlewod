@@ -30,6 +30,9 @@ class Choice(models.Model):
 class AthleteProfile(models.Model):
     name = models.CharField(max_length=100)
 
+    cumulative_reads = models.IntegerField(default=0)
+    cumulative_writes = models.IntegerField(default=0)
+
     snatch_1rm = models.IntegerField(default=0)
     power_snatch_1rm = models.IntegerField(default=0)
     hang_snatch_1rm = models.IntegerField(default=0)

@@ -80,3 +80,17 @@ class AthleteProfileTest(TestCase):
             athleteprofile = AthleteProfile.objects.get(name__contains='mr.duplicate')
         except MultipleObjectsReturned:
             assert(False)
+
+    def test_cumulative_reads_using_POST(self):
+        myClient = Client()
+        response = myClient.post('/polls/', {'athletename': 'Hoang Ngo'})
+        response = myClient.post('/polls/', {'athletename': 'Hoang Ngo'})
+        response = myClient.post('/polls/', {'athletename': 'Hoang Ngo'})
+        assert(AthleteProfile.objects.get(name__contains='Hoang Ngo').cumulative_reads == 3)
+
+    def test_cumulative_writes_using_POST(self):
+        myClient = Client()
+        response = myClient.post('/polls/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': '999'})
+        response = myClient.post('/polls/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': '999'})
+        response = myClient.post('/polls/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': '999'})
+        assert(AthleteProfile.objects.get(name__contains='Hoang Ngo').cumulative_writes == 3)

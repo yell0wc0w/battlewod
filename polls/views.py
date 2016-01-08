@@ -33,6 +33,11 @@ def AthleteView(request):
             athleteprofile = AthleteProfile.objects.filter(name__icontains=athletename)[0]
         except ObjectDoesNotExist:
             athleteprofile = AthleteProfile.objects.filter(name__icontains='')[0]
+
+        # keep track of analytics
+        athleteprofile.cumulative_reads += 1
+        athleteprofile.save(update_fields=['cumulative_reads'])
+
         context = {'athleteprofile': athleteprofile, 'version': VERSION}
         html = 'polls/index.html'
 
@@ -55,6 +60,8 @@ def AthleteView(request):
             athleteprofile.set_stat_value(POST_data.get('id'), POST_data.get('value'))
 
         athleteprofile.presave_stats()
+        # keep track of analytics
+        athleteprofile.cumulative_writes += 1
         athleteprofile.save()
 
         #now return new value to page (perhaps DB call is not required? future optimization)
