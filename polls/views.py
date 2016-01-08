@@ -19,17 +19,20 @@ def AthleteView(request):
 
         # Create new profile as needed
         if newathletename is not None:
-            new_athlete_profile = AthleteProfile(name=newathletename)
-            new_athlete_profile.save()
-            athletename = newathletename
+            if (AthleteProfile.objects.filter(name__iexact=newathletename).count() == 0):
+                new_athlete_profile = AthleteProfile(name=newathletename)
+                new_athlete_profile.save()
+                athletename = newathletename
+            else:
+                athletename = newathletename
 
         # Preparation of rendering screen
         try:
-            athleteprofile = AthleteProfile.objects.get(name__contains=athletename)
+            athleteprofile = AthleteProfile.objects.get(name__icontains=athletename)
         except MultipleObjectsReturned:
-            athleteprofile = AthleteProfile.objects.filter(name__contains=athletename)[0]
+            athleteprofile = AthleteProfile.objects.filter(name__icontains=athletename)[0]
         except ObjectDoesNotExist:
-            athleteprofile = AthleteProfile.objects.filter(name__contains='')[0]
+            athleteprofile = AthleteProfile.objects.filter(name__icontains='')[0]
         context = {'athleteprofile': athleteprofile, 'version': VERSION}
         html = 'polls/index.html'
 
@@ -39,9 +42,9 @@ def AthleteView(request):
         athletename = POST_data.get('athletename')
 
         try:
-            athleteprofile = AthleteProfile.objects.get(name__contains=athletename)
+            athleteprofile = AthleteProfile.objects.get(name__icontains=athletename)
         except MultipleObjectsReturned:
-            athleteprofile = AthleteProfile.objects.filter(name__contains=athletename)[0]
+            athleteprofile = AthleteProfile.objects.filter(name__icontains=athletename)[0]
 
         athleteprofile.setup_stats()
 

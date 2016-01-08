@@ -1,8 +1,6 @@
 from django.test import TestCase, Client
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 import unittest
-import string
-
 
 from .models import AthleteProfile
 
@@ -18,16 +16,15 @@ class AthleteProfileTest(TestCase):
 
     def test_search_and_find_valid_full_name_model_only(self):
         try:
-            athleteprofile = AthleteProfile.objects.get(name__contains='Hoang Ngo')
+            athleteprofile = AthleteProfile.objects.get(name__icontains='Hoang Ngo')
         except ObjectDoesNotExist:
             assert(False)
 
         assert(athleteprofile.name == 'Hoang Ngo')
 
-    @unittest.expectedFailure
     def test_search_and_find_valid_full_name_case_sensitive_model_only(self):
         try:
-            athleteprofile = AthleteProfile.objects.get(name__contains='hoang ngo')
+            athleteprofile = AthleteProfile.objects.get(name__icontains='hoang')
         except ObjectDoesNotExist:
             assert(False)
 
@@ -35,7 +32,7 @@ class AthleteProfileTest(TestCase):
 
     def test_search_and_find_partial_name_model_only(self):
         try:
-            athleteprofile = AthleteProfile.objects.get(name__contains='Hoan')
+            athleteprofile = AthleteProfile.objects.get(name__icontains='Hoan')
         except ObjectDoesNotExist:
             assert(False)
 
@@ -68,3 +65,18 @@ class AthleteProfileTest(TestCase):
         assert(response.context['version'] != None)
         html_response_in_string = response.getvalue().decode("utf-8")
         assert(html_response_in_string.find('Currently using BattleWOD v') >= 0)
+
+    def test_add_new_profile_happy_path_using_POST(self):
+        myClient = Client()
+        response = myClient.post('/polls/', {'newathletename': 'Roger Bazinet New Client'})
+        assert(response.context['athleteprofile'].name == 'Roger Bazinet New Client')
+
+    def test_add_new_profile_duplicate_record_using_POST(self):
+        myClient = Client()
+        response = myClient.post('/polls/', {'newathletename': 'mr.duplicate'})
+        response = myClient.post('/polls/', {'newathletename': 'mr.duplicate'})
+
+        try:
+            athleteprofile = AthleteProfile.objects.get(name__contains='mr.duplicate')
+        except MultipleObjectsReturned:
+            assert(False)
