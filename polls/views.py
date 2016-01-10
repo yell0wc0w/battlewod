@@ -27,12 +27,15 @@ def AthleteView(request):
                 athletename = newathletename
 
         # Preparation of rendering screen
-        try:
-            athleteprofile = AthleteProfile.objects.get(name__icontains=athletename)
-        except MultipleObjectsReturned:
-            athleteprofile = AthleteProfile.objects.filter(name__icontains=athletename)[0]
-        except ObjectDoesNotExist:
-            athleteprofile = AthleteProfile.objects.filter(name__icontains='')[0]
+        if athletename == '':
+            athleteprofile = AthleteProfile.objects.get(name__iexact='')
+        else:
+            try:
+                athleteprofile = AthleteProfile.objects.get(name__icontains=athletename)
+            except MultipleObjectsReturned:
+                athleteprofile = AthleteProfile.objects.filter(name__icontains=athletename)[0]
+            except ObjectDoesNotExist:
+                athleteprofile = AthleteProfile.objects.get(name__iexact='')
 
         # keep track of analytics
         athleteprofile.cumulative_reads += 1
@@ -68,4 +71,9 @@ def AthleteView(request):
         context = {'stat_result': athleteprofile.get_stat_value(POST_data.get('id'))}
         html = 'polls/results.html'
 
+    return render(request, html, context)
+
+def SeasonLadderView(request):
+    context = {}
+    html = 'polls/seasonladder.html'
     return render(request, html, context)
