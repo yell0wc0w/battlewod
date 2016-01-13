@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 import unittest
 
-from .models import AthleteProfile
+from .models import AthleteProfile, WOD_list
 
 class AthleteProfileTest(TestCase):
     def setUp(self):
@@ -100,3 +100,41 @@ class AthleteProfileTest(TestCase):
         response = myClient.post('/battlewodapp/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': '999'})
         response = myClient.post('/battlewodapp/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': '999'})
         assert(AthleteProfile.objects.get(name__contains='Hoang Ngo').cumulative_writes == 3)
+
+    def test_wodentry_enter_good_wod_and_save(self):
+        myClient = Client()
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': 'strength1', 'wod': 'wod1'})
+        try:
+            WOD_list.objects.get(wod_type__icontains='warmup')
+            WOD_list.objects.get(wod_type__icontains='strength')
+            WOD_list.objects.get(wod_type__icontains='wod')
+        except ObjectDoesNotExist:
+            assert(False)
+
+    def test_wodentry_invalid_payload(self):
+        myClient = Client()
+        response = myClient.post('/battlewodapp/wodentry', {'warmup_bad': 'warmup1', 'strength': 'strength1', 'wod': 'wod1'})
+        try:
+            WOD_list.objects.get(wod_type__icontains='warmup')
+            assert(False)
+        except ObjectDoesNotExist:
+            pass
+
+        try:
+            WOD_list.objects.get(wod_type__icontains='strength')
+            WOD_list.objects.get(wod_type__icontains='wod')
+        except ObjectDoesNotExist:
+            assert(False)
+
+    def test_wodentry_page_blank(self):
+        myClient = Client()
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': '', 'wod': ''})
+
+        wod_type_list = {'warmup', 'strength', 'wod'}
+
+        for wod_type in wod_type_list:
+            try:
+                WOD_list.objects.get(wod_type__icontains=wod_type)
+                assert(False)
+            except ObjectDoesNotExist:
+                pass

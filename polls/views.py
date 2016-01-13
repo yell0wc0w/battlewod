@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from .models import AthleteProfile
+from .models import AthleteProfile, WOD_list
 from mysite.settings import VERSION
+import datetime
 
 def AthleteView(request):
     # Handle text input, as needed
@@ -76,4 +77,23 @@ def AthleteView(request):
 def SeasonLadderView(request):
     context = {}
     html = 'polls/seasonladder.html'
+    return render(request, html, context)
+
+def WodEntryLadderView(request):
+    POST_data = request.POST.dict()
+
+    if ('warmup' in POST_data and POST_data.get('warmup') != ''):
+        new_wod1 = WOD_list(wod_type='warmup', description=POST_data.get('warmup'), date=datetime.datetime.now())
+        new_wod1.save()
+
+    if ('strength' in POST_data and POST_data.get('warmup') != ''):
+        new_wod2 = WOD_list(wod_type='strength', description=POST_data.get('strength'), date=datetime.datetime.now())
+        new_wod2.save()
+
+    if ('wod' in POST_data and POST_data.get('warmup') != ''):
+        new_wod3 = WOD_list(wod_type='wod', description=POST_data.get('wod'), date=datetime.datetime.now())
+        new_wod3.save()
+
+    context = {}
+    html = 'polls/wodentry.html'
     return render(request, html, context)
