@@ -1,27 +1,49 @@
 <head>
-  <meta charset="utf-8">
-  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="/static/js/bootstrap-datepicker.js"></script></script>
+    <link rel="stylesheet" href="/static/polls/datepicker.css">
+
+    <script type="text/javascript">
+        $(function() {
+            $('#dp1').datepicker({
+                format: 'mm-dd-yyyy',
+                todayBtn: 'linked'
+            });
+        });
+    </script>
+
 </head>
 <body>
-
+<h1>WOD Entry page</h1>
 <form role="form" class="col-sm-6" method="post">
     {% csrf_token %}
+    <h2>WOD Date</h2>
+    <div class="well">
+        <input type="text" class="span2" value="02-16-2012" name="date" id="dp1" >
+    </div>
+
     <div class = "form-group">
-      <label for="warmup">Warmup</label>
+      <h2>Warm up</h2>
       <textarea class="form-control" name="warmup" id="warmup" rows="8" placeholder="Enter Warmup"></textarea>
    </div>
    <div class = "form-group">
-      <label for="strength">Strengh</label>
+      <h2>Strength / Tech</h2>
       <textarea class="form-control" name="strength" id="strength" rows="8" placeholder="Enter Strength WOD"></textarea>
    </div>
    <div class="form-group">
-      <label for="wod">WOD</label>
+      <h2>WOD</h2>
       <textarea class="form-control" name="wod" id="wod" rows="8" placeholder="Enter WOD"></textarea>
    </div>
    <button type="submit" class="btn btn-primary btn-md">Submit</button>
+
+
 </form>
 
 
+
 </body>
+
+

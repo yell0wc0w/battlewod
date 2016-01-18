@@ -28,7 +28,6 @@ class Choice(models.Model):
         return self.choice_text
 
 class WOD_list(models.Model):
-class WOD_list(models.Model):
     wod_type = models.CharField(max_length=20, default=None)
     description = models.TextField()
     date = models.DateField()
