@@ -138,3 +138,27 @@ class AthleteProfileTest(TestCase):
                 assert(False)
             except ObjectDoesNotExist:
                 pass
+
+    def test_wodentry_enter_only_warmup(self):
+        myClient = Client()
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': '', 'wod': ''})
+        try:
+            WOD_list.objects.get(wod_type__icontains='warmup')
+        except ObjectDoesNotExist:
+            assert(False)
+
+    def test_wodentry_enter_only_strength(self):
+        myClient = Client()
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': 'strength1', 'wod': ''})
+        try:
+            WOD_list.objects.get(wod_type__icontains='strength')
+        except ObjectDoesNotExist:
+            assert(False)
+
+    def test_wodentry_enter_only_wod(self):
+        myClient = Client()
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': '', 'wod': 'wod1'})
+        try:
+            WOD_list.objects.get(wod_type__icontains='wod')
+        except ObjectDoesNotExist:
+            assert(False)
