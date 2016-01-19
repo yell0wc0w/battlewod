@@ -9,7 +9,7 @@
     <script type="text/javascript">
         $(function() {
             $('#dp1').datepicker({
-                format: 'mm-dd-yyyy',
+                format: 'yyyy-mm-dd',
                 todayBtn: 'linked'
             });
         });
@@ -22,20 +22,20 @@
     {% csrf_token %}
     <h2>WOD Date</h2>
     <div class="well">
-        <input type="text" class="span2" value="02-16-2012" name="date" id="dp1" >
+        <input type="text" class="span2" value="Select a date" name="date" id="dp1" >
     </div>
 
     <div class = "form-group">
       <h2>Warm up</h2>
-      <textarea class="form-control" name="warmup" id="warmup" rows="8" placeholder="Enter Warmup"></textarea>
+      <textarea class="form-control" name="warmup" id="warmup" rows="8" placeholder="Enter Warmup">{{ warmup_text }}</textarea>
    </div>
    <div class = "form-group">
       <h2>Strength / Tech</h2>
-      <textarea class="form-control" name="strength" id="strength" rows="8" placeholder="Enter Strength WOD"></textarea>
+      <textarea class="form-control" name="strength" id="strength" rows="8" placeholder="Enter Strength WOD">{{ strength_text }}</textarea>
    </div>
    <div class="form-group">
       <h2>WOD</h2>
-      <textarea class="form-control" name="wod" id="wod" rows="8" placeholder="Enter WOD"></textarea>
+      <textarea class="form-control" name="wod" id="wod" rows="8" placeholder="Enter WOD">{{ wod_text }}</textarea>
    </div>
    <button type="submit" class="btn btn-primary btn-md">Submit</button>
 

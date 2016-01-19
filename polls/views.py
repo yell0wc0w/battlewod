@@ -80,20 +80,46 @@ def SeasonLadderView(request):
     return render(request, html, context)
 
 def WodEntryLadderView(request):
-    POST_data = request.POST.dict()
 
-    if ('warmup' in POST_data and POST_data.get('warmup') != ''):
-        new_wod1 = WOD_list(wod_type='warmup', description=POST_data.get('warmup'), date=datetime.datetime.now())
-        new_wod1.save()
+    if (request.method == 'GET'):
+        GET_data = request.GET.dict()
+        context = {'warmup_text': '', 'strength_text': '', 'wod_text' : ''}
 
-    if ('strength' in POST_data and POST_data.get('strength') != ''):
-        new_wod2 = WOD_list(wod_type='strength', description=POST_data.get('strength'), date=datetime.datetime.now())
-        new_wod2.save()
+        if GET_data.get('date') == None:
+            day_criteria = datetime.date.today()
+        else:
+            day_criteria = GET_data.get('date')
 
-    if ('wod' in POST_data and POST_data.get('wod') != ''):
-        new_wod3 = WOD_list(wod_type='wod', description=POST_data.get('wod'), date=datetime.datetime.now())
-        new_wod3.save()
+        specific_day_WOD_list = WOD_list.objects.filter(date__range=(day_criteria, day_criteria))
 
-    context = {}
-    html = 'polls/wodentry.html'
+        if specific_day_WOD_list != []:
+            for wod in specific_day_WOD_list:
+                if wod.wod_type == 'warmup':
+                    context['warmup_text'] = wod.description
+                elif wod.wod_type == 'strength':
+                    context['strength_text'] = wod.description
+                elif wod.wod_type == 'wod':
+                    context['wod_text'] = wod.description
+
+        html = 'polls/wodentry.html'
+
+
+    elif (request.method == 'POST'):
+        POST_data = request.POST.dict()
+
+        if ('warmup' in POST_data and POST_data.get('warmup') != ''):
+            new_wod1 = WOD_list(wod_type='warmup', description=POST_data.get('warmup'), date=POST_data.get('date'))
+            new_wod1.save()
+
+        if ('strength' in POST_data and POST_data.get('strength') != ''):
+            new_wod2 = WOD_list(wod_type='strength', description=POST_data.get('strength'), date=POST_data.get('date'))
+            new_wod2.save()
+
+        if ('wod' in POST_data and POST_data.get('wod') != ''):
+            new_wod3 = WOD_list(wod_type='wod', description=POST_data.get('wod'), date=POST_data.get('date'))
+            new_wod3.save()
+
+        context = {}
+        html = 'polls/wodentry.html'
+
     return render(request, html, context)
