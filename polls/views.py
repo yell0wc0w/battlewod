@@ -81,28 +81,15 @@ def SeasonLadderView(request):
 
 def WodEntryLadderView(request):
 
+    context = {'warmup_text': '', 'strength_text': '', 'wod_text' : ''}
+
     if (request.method == 'GET'):
         GET_data = request.GET.dict()
-        context = {'warmup_text': '', 'strength_text': '', 'wod_text' : ''}
 
         if GET_data.get('date') == None:
             day_criteria = datetime.date.today()
         else:
             day_criteria = GET_data.get('date')
-
-        specific_day_WOD_list = WOD_list.objects.filter(date__range=(day_criteria, day_criteria))
-
-        if specific_day_WOD_list != []:
-            for wod in specific_day_WOD_list:
-                if wod.wod_type == 'warmup':
-                    context['warmup_text'] = wod.description
-                elif wod.wod_type == 'strength':
-                    context['strength_text'] = wod.description
-                elif wod.wod_type == 'wod':
-                    context['wod_text'] = wod.description
-
-        html = 'polls/wodentry.html'
-
 
     elif (request.method == 'POST'):
         POST_data = request.POST.dict()
@@ -131,7 +118,17 @@ def WodEntryLadderView(request):
                     wod.description = POST_data.get('wod')
                 wod.save()
 
-        context = {}
-        html = 'polls/wodentry.html'
+        day_criteria = POST_data.get('date')
+
+    if WOD_list.objects.filter(date__range=(day_criteria, day_criteria)).count() > 0:
+        for wod in WOD_list.objects.filter(date__range=(day_criteria, day_criteria)):
+            if wod.wod_type == 'warmup':
+                context['warmup_text'] = wod.description
+            elif wod.wod_type == 'strength':
+                context['strength_text'] = wod.description
+            elif wod.wod_type == 'wod':
+                context['wod_text'] = wod.description
+
+    html = 'polls/wodentry.html'
 
     return render(request, html, context)
