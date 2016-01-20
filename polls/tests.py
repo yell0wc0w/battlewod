@@ -116,25 +116,31 @@ class AthleteProfileTest(TestCase):
         response = myClient.post('/battlewodapp/', {'athletename': 'Hoang Ngo', 'id': 'backsquat_1rm', 'value': '999'})
         assert(AthleteProfile.objects.get(name__contains='Hoang Ngo').cumulative_writes == 3)
 
-    def test_wodentry_enter_good_wod_and_save(self):
+    def test_wodentry_enter_good_wods_and_nothing_in_db(self):
+        WOD_list.objects.filter(date__range=(date.today(), date.today())).delete()
+
         myClient = Client()
         response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': 'strength1', 'wod': 'wod1', 'date': date.today()})
         try:
-            WOD_list.objects.filter(wod_type__icontains='warmup')
-            WOD_list.objects.filter(wod_type__icontains='strength')
-            WOD_list.objects.filter(wod_type__icontains='wod')
+            result = WOD_list.objects.filter(wod_type__icontains='warmup', date__range=(date.today(), date.today()))
+            assert (result.count() == 1)
+
+            result = WOD_list.objects.filter(wod_type__icontains='strength', date__range=(date.today(), date.today()))
+            assert (result.count() == 1)
+
+            result = WOD_list.objects.filter(wod_type__icontains='wod', date__range=(date.today(), date.today()))
+            assert (result.count() == 1)
+
         except ObjectDoesNotExist:
             assert(False)
 
-    @unittest.expectedFailure
     def test_wodentry_invalid_payload(self):
         myClient = Client()
         response = myClient.post('/battlewodapp/wodentry', {'warmup_bad': 'warmup1', 'strength': 'strength1', 'wod': 'wod1', 'date': date.today()})
         try:
             WOD_list.objects.filter(wod_type__icontains='warmup', date__range=(date.today(), date.today()))
+        except MultipleObjectsReturned:
             assert(False)
-        except ObjectDoesNotExist:
-            pass
 
         try:
             WOD_list.objects.filter(wod_type__icontains='strength')
@@ -142,7 +148,6 @@ class AthleteProfileTest(TestCase):
         except ObjectDoesNotExist:
             assert(False)
 
-    @unittest.expectedFailure
     def test_wodentry_post_empty_textfields(self):
         myClient = Client()
         response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': '', 'wod': '', 'date': date.today()})
@@ -152,9 +157,8 @@ class AthleteProfileTest(TestCase):
         for wod_type in wod_type_list:
             try:
                 WOD_list.objects.filter(wod_type__icontains=wod_type, date__range=(date.today(), date.today()))
+            except MultipleObjectsReturned:
                 assert(False)
-            except ObjectDoesNotExist:
-                pass
 
     def test_wodentry_enter_only_warmup(self):
         myClient = Client()
@@ -211,3 +215,11 @@ class AthleteProfileTest(TestCase):
         assert(response.context['strength_text'] == 'new strength')
         assert(response.context['wod_text'] == 'new wod')
 
+        result = WOD_list.objects.filter(date__range=(date.today(), date.today()), wod_type__exact='warmup')
+        assert(result.count() == 1)
+
+        result = WOD_list.objects.filter(date__range=(date.today(), date.today()), wod_type__exact='strength')
+        assert(result.count() == 1)
+
+        result = WOD_list.objects.filter(date__range=(date.today(), date.today()), wod_type__exact='wod')
+        assert(result.count() == 1)
