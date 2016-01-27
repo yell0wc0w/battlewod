@@ -66,6 +66,10 @@ class AthleteProfile(models.Model):
     deadlift_3rm = models.IntegerField(default=0)
     deadlift_5rm = models.IntegerField(default=0)
 
+    thruster_1rm = models.IntegerField(default=0)
+
+    overhead_squat_1rm = models.IntegerField(default=0)
+
     angie = models.CharField(max_length=10, default='0')
     barbara = models.CharField(max_length=10, default='0')
     chelsea = models.CharField(max_length=10, default='0')
@@ -105,6 +109,10 @@ class AthleteProfile(models.Model):
     bulger = models.CharField(max_length=10, default='0')
     fight_gone_bad = models.CharField(max_length=10, default='0')
 
+    max_pull_ups = models.IntegerField(default=0)
+    max_handstand_push_up = models.IntegerField(default=0)
+    max_muscle_up = models.IntegerField(default=0)
+
     stats_dict = {}
 
     def __str__(self):
@@ -139,6 +147,9 @@ class AthleteProfile(models.Model):
         self.stats_dict['deadlift_1rm'] = self.deadlift_1rm
         self.stats_dict['deadlift_3rm'] = self.deadlift_3rm
         self.stats_dict['deadlift_5rm'] = self.deadlift_5rm
+
+        self.stats_dict['thruster_1rm'] = self.thruster_1rm
+        self.stats_dict['overhead_squat_1rm'] = self.overhead_squat_1rm
 
         self.stats_dict['angie'] = self.angie
         self.stats_dict['barbara'] = self.barbara
@@ -179,6 +190,11 @@ class AthleteProfile(models.Model):
         self.stats_dict['bulger'] = self.bulger
         self.stats_dict['fight_gone_bad'] = self.fight_gone_bad
 
+        self.stats_dict['max_pull_ups'] = self.max_pull_ups
+        self.stats_dict['max_muscle_up'] = self.max_muscle_up
+        self.stats_dict['max_handstand_push_up'] = self.max_handstand_push_up
+
+
     def set_stat_value(self, stat_to_change, value):
         self.stats_dict[stat_to_change] = value
 
@@ -191,7 +207,8 @@ class AthleteProfile(models.Model):
                                                 'clean_and_jerk_1rm', 'hang_clean_1rm', 'power_clean_1rm', 'squat_clean_1rm',
                                                 'split_jerk_1rm', 'push_jerk_1rm', 'push_press_1rm', 'shoulder_press_1rm',
                                                 'backsquat_1rm', 'backsquat_3rm', 'backsquat_5rm', 'front_squat_1rm',
-                                                'front_squat_3rm', 'front_squat_5rm', 'deadlift_1rm', 'deadlift_3rm', 'deadlift_5rm'}
+                                                'front_squat_3rm', 'front_squat_5rm', 'deadlift_1rm', 'deadlift_3rm', 'deadlift_5rm',
+                                             'thruster_1rm', 'overhead_squat_1rm', 'max_pull_ups', 'max_muscle_up', 'max_handstand_push_up'}
 
             for key in set_to_validate_numeric_field:
                 int(self.stats_dict[key])
@@ -228,6 +245,9 @@ class AthleteProfile(models.Model):
         self.deadlift_1rm = self.stats_dict['deadlift_1rm']
         self.deadlift_3rm = self.stats_dict['deadlift_3rm']
         self.deadlift_5rm = self.stats_dict['deadlift_5rm']
+
+        self.thruster_1rm = self.stats_dict['thruster_1rm']
+        self.overhead_squat_1rm = self.stats_dict['overhead_squat_1rm']
 
         self.angie = self.stats_dict['angie']
         self.barbara = self.stats_dict['barbara']
@@ -267,4 +287,8 @@ class AthleteProfile(models.Model):
         self.jack = self.stats_dict['jack']
         self.bulger = self.stats_dict['bulger']
         self.fight_gone_bad = self.stats_dict['fight_gone_bad']
+
+        self.max_pull_ups = self.stats_dict['max_pull_ups']
+        self.max_muscle_up = self.stats_dict['max_muscle_up']
+        self.max_handstand_pushup = self.stats_dict['max_handstand_push_up']
 
