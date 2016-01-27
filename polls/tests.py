@@ -120,7 +120,7 @@ class AthleteProfileTest(TestCase):
         WOD_list.objects.filter(date__range=(date.today(), date.today())).delete()
 
         myClient = Client()
-        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': 'strength1', 'wod': 'wod1', 'date': date.today()})
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': 'strength1', 'wod': 'wod1', 'date': date.today().strftime("%Y-%m-%d")})
         try:
             result = WOD_list.objects.filter(wod_type__icontains='warmup', date__range=(date.today(), date.today()))
             assert (result.count() == 1)
@@ -162,7 +162,7 @@ class AthleteProfileTest(TestCase):
 
     def test_wodentry_enter_only_warmup(self):
         myClient = Client()
-        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': '', 'wod': '', 'date': date.today()})
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'warmup1', 'strength': '', 'wod': '', 'date': date.today().strftime('%Y-%m-%d')})
         try:
             WOD_list.objects.filter(wod_type__icontains='warmup')
         except ObjectDoesNotExist:
@@ -170,7 +170,7 @@ class AthleteProfileTest(TestCase):
 
     def test_wodentry_enter_only_strength(self):
         myClient = Client()
-        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': 'strength1', 'wod': '', 'date': date.today()})
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': 'strength1', 'wod': '', 'date': date.today().strftime('%Y-%m-%d')})
         try:
             WOD_list.objects.filter(wod_type__icontains='strength')
         except ObjectDoesNotExist:
@@ -178,7 +178,7 @@ class AthleteProfileTest(TestCase):
 
     def test_wodentry_enter_only_wod(self):
         myClient = Client()
-        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': '', 'wod': 'wod1', 'date': date.today()})
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': '', 'strength': '', 'wod': 'wod1', 'date': date.today().strftime('%Y-%m-%d')})
         try:
             WOD_list.objects.filter(wod_type__icontains='wod')
         except ObjectDoesNotExist:
@@ -190,6 +190,7 @@ class AthleteProfileTest(TestCase):
         assert(response.context['warmup_text'] == 'warmup1')
         assert(response.context['strength_text'] == 'strength1')
         assert(response.context['wod_text'] == 'wod1')
+        assert(response.context['date_text'] == date.today().strftime('%Y-%m-%d'))
 
     def test_wodentry_get_today_wod_but_not_in_db(self):
         WOD_list.objects.filter(date__range=(date.today(), date.today())).delete()
@@ -207,9 +208,9 @@ class AthleteProfileTest(TestCase):
         assert(response.context['strength_text'] == 'new year strength')
         assert(response.context['wod_text'] == 'new year wod')
 
-    def test_wodentry_update_particular_day_wod(self):
+    def test_wodentry_update_today_wod(self):
         myClient = Client()
-        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'new warmup', 'strength': 'new strength', 'wod': 'new wod', 'date': date.today()})
+        response = myClient.post('/battlewodapp/wodentry', {'warmup': 'new warmup', 'strength': 'new strength', 'wod': 'new wod', 'date': date.today().strftime('%Y-%m-%d')})
         response = myClient.get('/battlewodapp/wodentry')
         assert(response.context['warmup_text'] == 'new warmup')
         assert(response.context['strength_text'] == 'new strength')

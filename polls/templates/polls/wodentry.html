@@ -18,13 +18,22 @@
 </head>
 <body>
 <h1>WOD Entry page</h1>
+
+<form role="form" method="get">
+    {% csrf_token %}
+    <div class="well">
+        <input type="text" class="span2" value="Select a date" name="date" id="dp1">
+        <button type="submit" class="btn btn-default btn-md">Submit</button>
+    </div>
+</form>
+
+
 <form role="form" class="col-sm-6" method="post">
     {% csrf_token %}
-    <h2>WOD Date</h2>
-    <div class="well">
-        <input type="text" class="span2" value="Select a date" name="date" id="dp1" >
+    <div class = "form-group">
+        <h2>WOD Date</h2>
+        <textarea readonly class="form-control" name="date" id="date" rows="1" placeholder="Selected Date">{{ date_text }}</textarea>
     </div>
-
     <div class = "form-group">
       <h2>Warm up</h2>
       <textarea class="form-control" name="warmup" id="warmup" rows="8" placeholder="Enter Warmup">{{ warmup_text }}</textarea>
@@ -38,11 +47,7 @@
       <textarea class="form-control" name="wod" id="wod" rows="8" placeholder="Enter WOD">{{ wod_text }}</textarea>
    </div>
    <button type="submit" class="btn btn-primary btn-md">Submit</button>
-
-
 </form>
-
-
 
 </body>
 
